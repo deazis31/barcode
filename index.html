@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Attendance System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Barcode Attendance System</h1>
+        <div class="tabs">
+            <div class="tab active" onclick="showSection('user-management')">User Management</div>
+            <div class="tab" onclick="showSection('barcode-generate')">Generate Barcode</div>
+            <div class="tab" onclick="showSection('scanner')">Scan Barcode</div>
+            <div class="tab" onclick="showSection('attendance')">Attendance</div>
+            <div class="tab" onclick="showSection('reports')">Reports</div>
+            <div class="tab" onclick="showSection('config')">Configuration</div>
+        </div>
+
+        <!-- User Management Section -->
+        <div id="user-management" class="section active">
+            <h2>Manage Users</h2>
+            <div class="form-group">
+                <label for="user-name">Name</label>
+                <input type="text" id="user-name" placeholder="Enter name">
+            </div>
+            <div class="form-group">
+                <label for="user-id">Unique ID</label>
+                <input type="text" id="user-id" placeholder="Enter unique ID">
+            </div>
+            <div class="form-group">
+                <label for="user-department">Department/Class</label>
+                <input type="text" id="user-department" placeholder="Enter department or class">
+            </div>
+            <div class="form-group">
+                <label for="user-role">Role</label>
+                <select id="user-role">
+                    <option value="Employee">Employee</option>
+                    <option value="Manager">Manager</option>
+                    <option value="Admin">Admin</option>
+                </select>
+            </div>
+            <button class="btn" onclick="addUser()">Add User</button>
+            <table id="user-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Department</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Barcode Generation Section -->
+        <div id="barcode-generate" class="section">
+            <h2>Generate Barcode</h2>
+            <div class="form-group">
+                <label for="barcode-user">Select User</label>
+                <select id="barcode-user"></select>
+            </div>
+            <button class="btn" onclick="generateBarcode()">Generate Barcode</button>
+            <div class="barcode-container">
+                <canvas id="barcode"></canvas>
+                <button class="btn" onclick="downloadBarcode()">Download Barcode</button>
+            </div>
+        </div>
+
+        <!-- Scanner Section -->
+        <div id="scanner" class="section">
+            <h2>Scan Barcode</h2>
+            <div id="scanner-container">
+                <div id="scanner-viewport" style="width: 100%; max-width: 640px; height: 480px;"></div>
+            </div>
+            <div class="form-group">
+                <label for="scanner-input">Manual Input (for external scanner)</label>
+                <input type="text" id="scanner-input" placeholder="Enter barcode manually">
+            </div>
+            <div id="scan-notification" class="notification"></div>
+        </div>
+
+        <!-- Attendance Monitoring Section -->
+        <div id="attendance" class="section">
+            <h2>Real-time Attendance</h2>
+            <table id="attendance-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Reports Section -->
+        <div id="reports" class="section">
+            <h2>Attendance Reports</h2>
+            <div class="form-group">
+                <label for="report-date">Select Date</label>
+                <input type="date" id="report-date">
+            </div>
+            <button class="btn" onclick="generateReport()">Generate Report</button>
+            <button class="btn" onclick="downloadReport()">Download CSV</button>
+            <table id="report-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <h3>Absent Users</h3>
+            <table id="absent-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>ID</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Configuration Section -->
+        <div id="config" class="section">
+            <h2>System Configuration</h2>
+            <div class="form-group">
+                <label for="work-start">Work Start Time</label>
+                <input type="time" id="work-start" value="08:00">
+            </div>
+            <div class="form-group">
+                <label for="work-end">Work End Time</label>
+                <input type="time" id="work-end" value="17:00">
+            </div>
+            <div class="form-group">
+                <label for="late-tolerance">Late Tolerance (minutes)</label>
+                <input type="number" id="late-tolerance" value="15">
+            </div>
+            <button class="btn" onclick="saveConfig()">Save Configuration</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
